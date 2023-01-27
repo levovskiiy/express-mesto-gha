@@ -1,7 +1,12 @@
 {
-  "extends": ["airbnb-base", "prettier"],
+  "extends": ["airbnb-base", "prettier", "plugin:import/recommended"],
   "rules": {
     "no-underscore-dangle": ["error", { "allow": ["_id"] }],
-    "import/extensions": ["off", { "always": "js" }]
+    "import/extensions": ["off", { "always": "js" }],
+    "import/no-unresolved": [2, { "commonjs": true, "amd": true }],
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2
   }
 }
