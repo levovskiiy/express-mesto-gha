@@ -76,10 +76,10 @@ module.exports = {
    */
   async update(req, res) {
     try {
-      const { name, about, avatar } = req.body
+      const { name, about } = req.body
       const { id } = req.user
 
-      const updatedUser = await UserService.update({ name, about, avatar }, id)
+      const updatedUser = await UserService.update({ name, about }, id)
 
       res.send({ data: updatedUser })
     } catch (err) {
