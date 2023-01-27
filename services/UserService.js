@@ -5,7 +5,6 @@ const IncorrectDataError = require('../exeptions/IncorrectDataError')
 module.exports = {
   /**
    * Возвращает всех пользователей в базе.
-   * @returns
    */
   async getAll() {
     const users = await User.find({})
@@ -18,7 +17,6 @@ module.exports = {
    * В случае невалидного ID выбрасывает исключение IncorrectDataError
    * Если пользователь не нашелся в базе выбрасывает исключение NotFoundError
    * @param {String} userId
-   * @returns
    */
   async getOne(userId) {
     const user = await User.findById(userId)
@@ -33,7 +31,6 @@ module.exports = {
   /**
    * Создание нового пользователя и запись в БД
    * @param {Object} userData
-   * @returns
    */
   async create(userData) {
     if (!userData) {
@@ -49,7 +46,6 @@ module.exports = {
    * Находит пользователя в базе по ID и обновляет его данные
    * @param {Object} userData
    * @param {String} id
-   * @returns
    */
   async update(userData, id) {
     if (!userData) {
@@ -71,7 +67,6 @@ module.exports = {
    * Изменяет аватар профиля
    * @param {String} avatar
    * @param {String} id
-   * @return {Promise<Query<Document<unknown, any, InferSchemaType<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>>> & InferSchemaType<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>> & {_id: Types.ObjectId} & ObtainSchemaGeneric<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>, "TVirtuals"> & ObtainSchemaGeneric<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>, "TInstanceMethods">, Document<unknown, any, InferSchemaType<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>>> & InferSchemaType<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>> & {_id: Types.ObjectId} & ObtainSchemaGeneric<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>, "TVirtuals"> & ObtainSchemaGeneric<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>, "TInstanceMethods">, ObtainSchemaGeneric<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>, "TQueryHelpers">, InferSchemaType<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>>> & ObtainSchemaGeneric<module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}, {}, {}, DefaultSchemaOptions, {name: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, about: {minlength: number, maxlength: number, type: StringConstructor, required: boolean}, avatar: {type: StringConstructor, required: boolean}}>, "TQueryHelpers">>}
    */
   async updateAvatar(avatar, id) {
     if (!avatar) {
