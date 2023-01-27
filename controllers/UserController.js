@@ -1,5 +1,4 @@
 const UserService = require('../services/UserService')
-const HttpError = require('../exeptions/HttpError')
 
 module.exports = {
   /**
@@ -8,17 +7,13 @@ module.exports = {
    * @param res
    * @return {Promise<void>}
    */
-  async getAll(req, res) {
+  async getAll(req, res, next) {
     try {
       const users = await UserService.getAll()
 
       res.send({ data: users })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({ message: err.message })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 
@@ -28,18 +23,14 @@ module.exports = {
    * @param res
    * @return {Promise<void>}
    */
-  async getOne(req, res) {
+  async getOne(req, res, next) {
     try {
       const { userId } = req.params
       const user = await UserService.getOne(userId)
 
       res.send({ data: user })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({ message: err.message })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 
@@ -49,7 +40,7 @@ module.exports = {
    * @param res
    * @return {Promise<void>}
    */
-  async create(req, res) {
+  async create(req, res, next) {
     try {
       const { name, about, avatar } = req.body
       const createdUser = await UserService.create({
@@ -60,11 +51,7 @@ module.exports = {
 
       res.status(201).send({ data: createdUser })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({ message: err.message })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 
@@ -74,7 +61,7 @@ module.exports = {
    * @param res
    * @return {Promise<void>}
    */
-  async update(req, res) {
+  async update(req, res, next) {
     try {
       const { name, about } = req.body
       const { id } = req.user
@@ -83,11 +70,7 @@ module.exports = {
 
       res.send({ data: updatedUser })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({ message: err.message })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 
@@ -97,7 +80,7 @@ module.exports = {
    * @param res
    * @return {Promise<void>}
    */
-  async updateAvatar(req, res) {
+  async updateAvatar(req, res, next) {
     try {
       const { avatar } = req.body
       const { id } = req.user
@@ -106,11 +89,7 @@ module.exports = {
 
       res.send({ data: updatedAvatar })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({ message: err.message })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 }

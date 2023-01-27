@@ -1,18 +1,17 @@
-const HttpError = require('../exeptions/HttpError')
 const CardService = require('../services/CardService')
 
 module.exports = {
-  async getAll(req, res) {
+  async getAll(req, res, next) {
     try {
       const cards = await CardService.getAll()
 
       res.send({ data: cards })
     } catch (err) {
-      res.status(500).send({ message: 'Произошла ошибка на сервере' })
+      next(err)
     }
   },
 
-  async create(req, res) {
+  async create(req, res, next) {
     try {
       const { name, link } = req.body
       const { id } = req.user
@@ -21,15 +20,11 @@ module.exports = {
 
       res.send({ data: card })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({ message: err.message })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 
-  async delete(req, res) {
+  async delete(req, res, next) {
     try {
       const { cardId } = req.params
       const { id } = req.user
@@ -38,15 +33,11 @@ module.exports = {
 
       res.send({ data: deletedCard })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({ message: err.message })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 
-  async like(req, res) {
+  async like(req, res, next) {
     try {
       const { cardId } = req.params
       const { id } = req.user
@@ -55,17 +46,11 @@ module.exports = {
 
       res.send({ data: likedCard })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({
-          message: err.message,
-        })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 
-  async unlike(req, res) {
+  async unlike(req, res, next) {
     try {
       const { cardId } = req.params
       const { id } = req.user
@@ -74,11 +59,7 @@ module.exports = {
 
       res.send({ data: unlikedCard })
     } catch (err) {
-      if (err instanceof HttpError) {
-        res.status(err.status).send({ message: err.message })
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на сервере' })
-      }
+      next(err)
     }
   },
 }
