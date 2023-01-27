@@ -1,7 +1,7 @@
 {
-    "extends": ["airbnb-base", "prettier"],
-    "rules": {
-        "no-underscore-dangle": "off",
-        "import/extensions": "off"
-    }
+  "extends": ["airbnb-base", "prettier"],
+  "rules": {
+    "no-underscore-dangle": "off",
+    "import/extensions": "off"
+  }
 }
