@@ -1,10 +1,12 @@
-const { Schema, Types, model } = require('mongoose')
+const { Schema, model } = require('mongoose')
+
+const owner = { type: Schema.Types.ObjectId, ref: 'User', required: true }
 
 const Card = new Schema({
   name: { type: String, minlength: 2, maxlength: 30, required: true },
   link: { type: String, required: true },
-  owner: { type: Types.ObjectId, required: true },
-  likes: { type: Array, default: [], required: true },
+  owner: { ...owner },
+  likes: [{ ...owner }],
   createdAt: { type: Date, default: Date.now },
 })
 
