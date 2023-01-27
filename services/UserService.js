@@ -1,21 +1,18 @@
 import User from '../models/User.js'
 
-class UserService {
-  static async getUsers() {
-    return await User.find({})
-  }
 
-  static async getUser(id) {
-    if (id) {
-      return await User.findById(id)
-    }
-
-    throw new Error('ID не указан')
-  }
-
-  static async createUser(user) {
-    return await User.create(user)
-  }
+export const getUsers = () => {
+  return await User.find({})
 }
 
-export default UserService
+export const getUser = (id) => {
+  if (id) {
+    return await User.findById(id);
+  }
+
+  throw new Error('ID not declare');
+}
+
+export const createUser = (user) => {
+  return await User.create(user);
+}
