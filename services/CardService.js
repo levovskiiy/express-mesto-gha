@@ -1,4 +1,4 @@
-const Card = require('../models/Card.js')
+const Card = require('./../models/Card')
 const NotFoundError = require('../exeptions/NotFoundError')
 const RequestError = require('../exeptions/RequestError')
 
