@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "lint": "npx eslint .",
-        "start": "node app",
+        "start": "node ./app.js",
         "dev": "nodemon -q"
     },
     "repository": {
