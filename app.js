@@ -7,7 +7,8 @@ import cardRouter from './routes/cardRouter.js'
 
 dotenv.config()
 
-const { DB_CONN, PORT } = process.env
+const DB_CONN = 'mongodb://localhost:27017/mestodb'
+const { PORT } = process.env
 
 const app = express()
 app.use(bodyParser.json())
