@@ -1,32 +1,41 @@
-import User from '../models/User'
+import UserService from '../services/UserService.js'
 
 class UserController {
   static async getUsers(req, res) {
     try {
-      const users = await User.find({})
+      const users = await UserService.getUsers()
       res.send({ data: users })
     } catch (err) {
-      res.status(500).send(`Статус ответа: ${500}\n, Ошибка: ${err.message}`)
+      res.status(500).send({
+        errorName: err.name,
+        message: err.message,
+      })
     }
   }
 
   static async getUser(req, res) {
     try {
-      const { _id: id } = req.body
-      const user = await User.findById(id)
+      const { userId } = req.params
+      const user = await UserService.getUser(userId)
       res.send({ data: user })
     } catch (err) {
-      res.status(500).send(`Статус ответа: ${500}\n Ошибка: ${err.message}`)
+      res.status(500).send({
+        errorName: err.name,
+        message: err.message,
+      })
     }
   }
 
   static async createUser(req, res) {
     try {
       const { name, about, avatar } = req.body
-      const createdUser = User.create({ name, about, avatar })
+      const createdUser = await UserService.createUser({ name, about, avatar })
       res.status(201).send({ data: createdUser })
     } catch (err) {
-      res.status(500).send(`Статус ответа: ${500}\n Ошибка: ${err.message}`)
+      res.status(500).send({
+        errorName: err.name,
+        message: err.message,
+      })
     }
   }
 }
