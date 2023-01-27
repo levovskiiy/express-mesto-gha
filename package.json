@@ -7,7 +7,6 @@
     "scripts": {
         "lint": "npx eslint .",
         "start": "node app",
-        "prepare": "node init",
         "dev": "nodemon -q"
     },
     "repository": {
