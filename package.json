@@ -6,17 +6,10 @@
     "start": "node app",
     "dev": "nodemon -q"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/levovskiiy/express-mesto-gha.git"
-  },
+
   "keywords": [],
   "author": "levovskiiy",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/levovskiiy/express-mesto-gha/issues"
-  },
-  "homepage": "https://github.com/levovskiiy/express-mesto-gha#readme",
   "devDependencies": {
     "eslint": "8.31.0",
     "eslint-config-airbnb-base": "^15.0.0",
