@@ -54,6 +54,7 @@ module.exports = {
 
     const updatedUser = await User.findByIdAndUpdate(id, userData, {
       new: true,
+      runValidators: true,
     })
 
     if (updatedUser === null) {
@@ -82,7 +83,7 @@ module.exports = {
     const currentUser = await User.findByIdAndUpdate(
       id,
       { avatar },
-      { new: true }
+      { new: true, runValidators: true }
     )
 
     if (currentUser === null) {
