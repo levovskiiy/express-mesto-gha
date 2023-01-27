@@ -1,4 +1,4 @@
-import { Schema, Types, model } from 'mongoose'
+const { Schema, Types, model } = require('mongoose')
 
 const Card = new Schema({
   name: { type: String, minlength: 2, maxlength: 30, required: true },
@@ -8,4 +8,4 @@ const Card = new Schema({
   createdAt: { type: Date, default: Date.now },
 })
 
-export default model('Card', Card)
+module.exports = model('Card', Card)

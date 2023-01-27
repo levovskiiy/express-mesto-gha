@@ -1,5 +1,5 @@
-import { Router } from 'express'
-import CardController from '../controllers/CardController.js'
+const { Router } = require('express')
+const CardController = require('../controllers/CardController')
 
 const cardRouter = new Router()
 
@@ -9,4 +9,4 @@ cardRouter.delete('/cards/:cardId', CardController.delete)
 cardRouter.put('/cards/:cardId/likes', CardController.like)
 cardRouter.delete('/cards/:cardId/likes', CardController.unlike)
 
-export default cardRouter
+module.exports = cardRouter

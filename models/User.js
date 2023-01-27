@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+const { Schema, model } = require('mongoose')
 
 const User = new Schema({
   name: { type: String, minlength: 2, maxlength: 30, required: true },
@@ -6,4 +6,4 @@ const User = new Schema({
   avatar: { type: String, required: true },
 })
 
-export default model('User', User)
+module.exports = model('User', User)

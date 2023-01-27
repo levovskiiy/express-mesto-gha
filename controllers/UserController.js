@@ -1,7 +1,7 @@
-import UserService from '../services/UserService.js'
-import HttpError from '../exeptions/HttpError.js'
+const UserService = require('../services/UserService')
+const HttpError = require('../exeptions/HttpError')
 
-export default {
+module.exports = {
   /**
    * Получение всех пользователей
    * @param req

@@ -1,8 +1,8 @@
-import NotFoundError from '../exeptions/NotFoundError.js'
-import User from '../models/User.js'
-import IncorrectDataError from '../exeptions/IncorrectDataError.js'
+const NotFoundError = require('../exeptions/NotFoundError')
+const User = require('../models/User')
+const IncorrectDataError = require('../exeptions/IncorrectDataError')
 
-export default {
+module.exports = {
   /**
    * Возвращает всех пользователей в базе.
    * @returns

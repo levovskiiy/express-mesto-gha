@@ -1,9 +1,9 @@
-import HttpError from './HttpError.js';
+const HttpError = require('./HttpError')
 
-export default class IncorrectDataError extends HttpError {
-    constructor(message) {
-        super(message)
-        this.name = 'IncorrectDataError'
-        this.status = 400;
-    }
+module.exports = class IncorrectDataError extends HttpError {
+  constructor(message) {
+    super(message)
+    this.name = 'IncorrectDataError'
+    this.status = 400
+  }
 }

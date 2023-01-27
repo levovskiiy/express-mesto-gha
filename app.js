@@ -1,9 +1,9 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import bodyParser from 'body-parser'
-import dotenv from 'dotenv'
-import userRouter from './routes/userRouter.js'
-import cardRouter from './routes/cardRouter.js'
+const express = require('express')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const dotenv = require('dotenv')
+const userRouter = require('./routes/userRouter')
+const cardRouter = require('./routes/cardRouter')
 
 dotenv.config()
 

@@ -1,7 +1,7 @@
-import HttpError from '../exeptions/HttpError.js'
-import CardService from '../services/CardService.js'
+const HttpError = require('../exeptions/HttpError')
+const CardService = require('../services/CardService')
 
-export default {
+module.exports = {
   async getAll(req, res) {
     try {
       const cards = await CardService.getAll()
