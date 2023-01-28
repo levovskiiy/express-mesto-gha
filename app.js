@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
 const userRouter = require('./routes/userRouter')
 const cardRouter = require('./routes/cardRouter')
-const NotFoundError = require('./exeptions/NotFoundError');
+const NotFoundError = require('./exeptions/NotFoundError')
 
 dotenv.config()
 
@@ -15,9 +15,6 @@ const app = express()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.all('*', (req, res, next) => {
-  next(new NotFoundError('Неправильный путь'));
-});
 
 app.use((req, res, next) => {
   req.user = {
@@ -28,9 +25,11 @@ app.use((req, res, next) => {
 })
 
 mongoose.connect(DB_CONN)
-
 app.use('/', userRouter)
 app.use('/', cardRouter)
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Неправильный путь'))
+})
 app.use((err, req, res, next) => {
   const { status = 500, message } = err
 
