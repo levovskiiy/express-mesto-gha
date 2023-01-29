@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 })
 
 mongoose.connect(DB_CONN)
+
 app.use('/', userRouter)
 app.use('/', cardRouter)
 app.use('*', (req, res, next) => {
@@ -46,20 +47,8 @@ app.use((err, req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-  // const handleError = () => {
-  //   if (err.name === 'ValidationError') {
-  //     return new ValidationError('Невалидные данные')
-  //   }
-
-  //   if (err.name === 'CastError') {
-  //     return new CastError('Невалидный id')
-  //   }
-
-  //   return err
-  // }
-
-  const { status = 500 } = err
-  res.status(status).send({ message: err.message })
+  const { status = 500, message } = err
+  res.status(status).send({ message })
   next()
 })
 app.listen(PORT)
