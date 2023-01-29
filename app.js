@@ -5,11 +5,13 @@ const dotenv = require('dotenv')
 const userRouter = require('./routes/userRouter')
 const cardRouter = require('./routes/cardRouter')
 const NotFoundError = require('./exeptions/NotFoundError')
+const ValidationError = require('./exeptions/ValidationError')
+const CastError = require('./exeptions/CastError')
 
 dotenv.config()
 
 const DB_CONN = 'mongodb://localhost:27017/mestodb'
-const { PORT } = process.env
+const { PORT = 5000 } = process.env
 
 const app = express()
 
@@ -30,10 +32,34 @@ app.use('/', cardRouter)
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Неправильный путь'))
 })
-app.use((err, req, res, next) => {
-  const { status = 500, message } = err
 
-  res.status(status).send({ message })
+app.use((err, req, res, next) => {
+  if (err instanceof mongoose.Error) {
+    next(new ValidationError(err))
+  }
+
+  if (err instanceof mongoose.Error) {
+    next(new CastError(err))
+  }
+
+  next(err)
+})
+
+app.use((err, req, res, next) => {
+  // const handleError = () => {
+  //   if (err.name === 'ValidationError') {
+  //     return new ValidationError('Невалидные данные')
+  //   }
+
+  //   if (err.name === 'CastError') {
+  //     return new CastError('Невалидный id')
+  //   }
+
+  //   return err
+  // }
+
+  const { status = 500 } = err
+  res.status(status).send({ message: err.message })
   next()
 })
 app.listen(PORT)

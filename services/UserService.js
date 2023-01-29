@@ -6,7 +6,7 @@ module.exports = {
    * Возвращает всех пользователей в базе.
    */
   async getAll() {
-    return User.find({});
+    return User.find({})
   },
 
   /**

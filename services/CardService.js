@@ -7,7 +7,7 @@ module.exports = {
    * Достает из базы данных все карточки
    */
   async getAll() {
-    return Card.find({});
+    return Card.find({})
   },
 
   /**
@@ -16,7 +16,9 @@ module.exports = {
    * @return {Promise<Card>}
    */
   async create(cardData) {
-    return Card.create(cardData)
+    const card = await Card.create(cardData)
+
+    return card
   },
 
   /**
