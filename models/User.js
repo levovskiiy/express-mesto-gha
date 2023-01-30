@@ -14,7 +14,7 @@ const User = new Schema({
   password: {
     type: String,
     required: true,
-    select: true,
+    select: false,
   },
   name: {
     type: String,
@@ -50,7 +50,7 @@ User.statics.findUserByCredentials = async function (email, password) {
     throw new UnauthorizedError('Неверный логин или пароль')
   }
 
-  const comapred = compare(password, user.password)
+  const comapred = await compare(password, user.password)
 
   if (!comapred) {
     throw new UnauthorizedError('Неверный логин или пароль')
