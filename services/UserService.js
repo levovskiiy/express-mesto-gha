@@ -15,8 +15,8 @@ module.exports = {
    * Если пользователь не нашелся в базе выбрасывает исключение NotFoundError
    * @param {String} userId
    */
-  async getOne(userId) {
-    const user = await User.findById(userId)
+  async getOne(id) {
+    const user = await User.findById(id)
 
     if (user === null) {
       throw new NotFoundError('Пользователь по указанному ID не найден.')
@@ -30,7 +30,15 @@ module.exports = {
    * @param {Object} userData
    */
   async create(userData) {
-    return User.create(userData)
+    const { email } = userData
+
+    // if (User.findOne({ email })) {
+    //   throw new RequestError('Пользователь с таким email уже существует')
+    // }
+
+    const user = await User.create(userData)
+
+    return user
   },
 
   /**
@@ -68,5 +76,15 @@ module.exports = {
     }
 
     return currentUser
+  },
+
+  async login(email, password) {
+    const user = await User.findUserByCredentials(email, password)
+
+    if (!user) {
+      throw new UnauthorizedError('Неверный логин или пароль')
+    }
+
+    return user
   },
 }

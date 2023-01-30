@@ -1,5 +1,10 @@
+const bcrypt = require('bcrypt')
 const UserService = require('../services/UserService')
 
+const dotenv = require('dotenv')
+dotenv.config()
+
+const { JWT_SECRET = 'DEV_MODE' } = process.env
 module.exports = {
   /**
    * Получение всех пользователей
@@ -34,6 +39,16 @@ module.exports = {
     }
   },
 
+  async getCurrent(req, res, next) {
+    try {
+      const user = await UserService.getOne(req.user.id)
+
+      res.send({ data: user })
+    } catch (err) {
+      next(err)
+    }
+  },
+
   /**
    * Создание пользователя
    * @param req
@@ -42,11 +57,12 @@ module.exports = {
    */
   async create(req, res, next) {
     try {
-      const { name, about, avatar } = req.body
+      const { email, password } = req.body
+      const hashPassword = await bcrypt.hash(password, 10)
+
       const createdUser = await UserService.create({
-        name,
-        about,
-        avatar,
+        email,
+        password: hashPassword,
       })
 
       res.status(201).send({ data: createdUser })
@@ -88,6 +104,21 @@ module.exports = {
       const updatedAvatar = await UserService.updateAvatar(avatar, id)
 
       res.send({ data: updatedAvatar })
+    } catch (err) {
+      next(err)
+    }
+  },
+
+  async login(req, res, next) {
+    try {
+      const { email, password } = req.body
+      const user = await UserService.login(email, password)
+
+      const token = sign({ id: user._id }, JWT_SECRET)
+
+      res
+        .cookie('jwt', token, { httpOnly: true, sameSite: true })
+        .send({ message: 'logged!' })
     } catch (err) {
       next(err)
     }
