@@ -3,7 +3,7 @@ const HttpError = require('./HttpError')
 module.exports = class NotFoundError extends HttpError {
   constructor(message) {
     super(message)
-    this.status = 404
+    this.statusCode = 404
     this.name = 'NotFoundError'
   }
 }
