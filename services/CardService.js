@@ -1,6 +1,6 @@
 const Card = require('../models/Card')
 const NotFoundError = require('../exeptions/NotFoundError')
-const RequestError = require('../exeptions/RequestError')
+const ForbiddenError = require('../exeptions/ForbiddenError');
 
 module.exports = {
   /**
@@ -16,14 +16,13 @@ module.exports = {
    * @return {Promise<Card>}
    */
   async create(cardData) {
-    const card = await Card.create(cardData)
-
-    return card
+    return Card.create(cardData);
   },
 
   /**
    * Находит карточку у пользователя и удаляет ее
    * @param {String} cardId
+   * @param {String} userId
    */
   async delete(cardId, userId) {
     const card = await Card.findById(cardId)
@@ -33,7 +32,7 @@ module.exports = {
     }
 
     if (card.owner.toString() !== userId) {
-      throw new RequestError(
+      throw new ForbiddenError(
         'Переданный ID пользователя не совпадает с ID пользователя карточки.'
       )
     }
