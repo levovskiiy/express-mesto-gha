@@ -46,8 +46,10 @@ app.use((err, req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-  const { status = 500, message } = err
-  res.status(status).send({ message })
+  const statusCode = err.status || 500;
+
+  const message = statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
+  res.status(statusCode).send({ message })
   next()
 })
 app.listen(PORT)
