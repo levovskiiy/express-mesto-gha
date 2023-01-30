@@ -1,10 +1,13 @@
-const bcrypt = require('bcrypt')
-const UserService = require('../services/UserService')
-const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
-dotenv.config()
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const UserService = require('../services/UserService');
+const ConflictError = require('../exeptions/ConflctError');
+const BadRequestError = require('../exeptions/BadRequestError');
 
-const { JWT_SECRET = 'DEV_MODE' } = process.env
+dotenv.config();
+
+const { JWT_SECRET = 'DEV_MODE' } = process.env;
 module.exports = {
   /**
    * Получение всех пользователей
@@ -15,11 +18,11 @@ module.exports = {
    */
   async getAll(req, res, next) {
     try {
-      const users = await UserService.getAll()
+      const users = await UserService.getAll();
 
-      res.send({ data: users })
+      res.send({ data: users });
     } catch (err) {
-      next(err)
+      next(err);
     }
   },
 
@@ -32,22 +35,30 @@ module.exports = {
    */
   async getOne(req, res, next) {
     try {
-      const { userId } = req.params
-      const user = await UserService.getOne(userId)
+      const { userId } = req.params;
+      const user = await UserService.getOne(userId);
 
-      res.send({ data: user })
+      res.send({ data: user });
     } catch (err) {
-      next(err)
+      if (err.name === 'CastError') {
+        next(new BadRequestError(err.message));
+      } else {
+        next(err);
+      }
     }
   },
 
   async getCurrent(req, res, next) {
     try {
-      const user = await UserService.getOne(req.user.id)
+      const user = await UserService.getOne(req.user.id);
 
-      res.send({ data: user })
+      res.send({ data: user });
     } catch (err) {
-      next(err)
+      if (err.name === 'CastError') {
+        next(new BadRequestError(err.message));
+      } else {
+        next(err);
+      }
     }
   },
 
@@ -60,20 +71,31 @@ module.exports = {
    */
   async create(req, res, next) {
     try {
-      const { email, password, name, about, avatar } = req.body
-      const hashPassword = await bcrypt.hash(password, 10)
+      const {
+        email, password, name, about, avatar,
+      } = req.body;
+
+      const hashPassword = await bcrypt.hash(password, 10);
 
       const createdUser = await UserService.create({
         email,
-        hashPassword,
         name,
         about,
         avatar,
-      })
+        password: hashPassword,
+      });
 
-      res.status(201).send({ data: createdUser.toJSON() })
+      res.status(201).send({ data: createdUser.toUserObj() });
     } catch (err) {
-      next(err)
+      if (err.code === 11000) {
+        next(new ConflictError('Пользователь с данным email уже существует'));
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequestError(`${Object.values(err.errors)
+          .map((e) => e.message)
+          .join((','))}`));
+      } else {
+        next(err);
+      }
     }
   },
 
@@ -86,14 +108,18 @@ module.exports = {
    */
   async update(req, res, next) {
     try {
-      const { name, about } = req.body
-      const { id } = req.user
+      const { name, about } = req.body;
+      const { id } = req.user;
 
-      const updatedUser = await UserService.update({ name, about }, id)
+      const updatedUser = await UserService.update({ name, about }, id);
 
-      res.send({ data: updatedUser })
+      res.send({ data: updatedUser });
     } catch (err) {
-      next(err)
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new BadRequestError(err.message));
+      } else {
+        next(err);
+      }
     }
   },
 
@@ -106,31 +132,34 @@ module.exports = {
    */
   async updateAvatar(req, res, next) {
     try {
-      const { avatar } = req.body
-      const { id } = req.user
+      const { avatar } = req.body;
+      const { id } = req.user;
 
-      const updatedAvatar = await UserService.updateAvatar(avatar, id)
+      const updatedAvatar = await UserService.updateAvatar(avatar, id);
 
-      res.send({ data: updatedAvatar })
+      res.send({ data: updatedAvatar });
     } catch (err) {
-      next(err)
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new BadRequestError(err.message));
+      } else {
+        next(err);
+      }
     }
   },
 
   async login(req, res, next) {
     try {
-      const { email, password } = req.body
+      const { email, password } = req.body;
 
-      const user = await UserService.login(email, password)
+      const user = await UserService.login(email, password);
 
-      const token = jwt.sign({ id: user._id }, JWT_SECRET, {expiresIn: '7d'})
+      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
       res
         .cookie('jwt', token, { httpOnly: true, sameSite: true })
-        .send({ message: 'logged!' })
-
+        .send({ message: 'logged!' });
     } catch (err) {
-      next(err)
+      next(err);
     }
   },
-}
+};

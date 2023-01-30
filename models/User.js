@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { isEmail, isURL } = require('validator')
-const { compare } = require('bcrypt')
-const { Schema, model } = require('mongoose')
-const UnauthorizedError = require('../exeptions/UnauthorizedError')
+const { isEmail, isURL } = require('validator');
+const { compare } = require('bcrypt');
+const { Schema, model } = require('mongoose');
+const UnauthorizedError = require('../exeptions/UnauthorizedError');
 
 const User = new Schema({
   email: {
@@ -34,7 +34,13 @@ const User = new Schema({
     default:
       'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
-})
+});
+
+User.methods.toUserObj = function toUserObj() {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
 
 /**
  * Имплементирует логику авторзации пользователя в системе.
@@ -43,20 +49,20 @@ const User = new Schema({
  * @param {string} password пароль пользователя
  * @returns {string | UnauthorizedError} JWT токен
  */
-User.statics.findUserByCredentials = async function (email, password) {
-  const user = await this.findOne({ email }).select('+password')
+User.statics.findUserByCredentials = async function findUserByCredentials(email, password) {
+  const user = await this.findOne({ email }).select('+password');
 
   if (!user) {
-    throw new UnauthorizedError('Неверный логин или пароль')
+    throw new UnauthorizedError('Неверный логин или пароль');
   }
 
-  const comapred = await compare(password, user.password)
+  const comapred = await compare(password, user.password);
 
   if (!comapred) {
-    throw new UnauthorizedError('Неверный логин или пароль')
+    throw new UnauthorizedError('Неверный логин или пароль');
   }
 
-  return user
-}
+  return user;
+};
 
-module.exports = model('User', User)
+module.exports = model('User', User);

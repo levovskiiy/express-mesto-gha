@@ -1,5 +1,5 @@
-const Card = require('../models/Card')
-const NotFoundError = require('../exeptions/NotFoundError')
+const Card = require('../models/Card');
+const NotFoundError = require('../exeptions/NotFoundError');
 const ForbiddenError = require('../exeptions/ForbiddenError');
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
    * Достает из базы данных все карточки
    */
   async getAll() {
-    return Card.find({})
+    return Card.find({});
   },
 
   /**
@@ -25,19 +25,19 @@ module.exports = {
    * @param {String} userId
    */
   async delete(cardId, userId) {
-    const card = await Card.findById(cardId)
+    const card = await Card.findById(cardId);
 
     if (card === null) {
-      throw new NotFoundError('Карточка с указанным ID не найдена.')
+      throw new NotFoundError('Карточка с указанным ID не найдена.');
     }
 
     if (card.owner.toString() !== userId) {
       throw new ForbiddenError(
-        'Переданный ID пользователя не совпадает с ID пользователя карточки.'
-      )
+        'Переданный ID пользователя не совпадает с ID пользователя карточки.',
+      );
     }
 
-    return card.delete()
+    return card.delete();
   },
 
   /**
@@ -49,14 +49,14 @@ module.exports = {
     const likedCard = await Card.findByIdAndUpdate(
       cardId,
       { $addToSet: { likes: userId } },
-      { new: true }
-    ).populate(['owner', 'likes'])
+      { new: true },
+    ).populate(['owner', 'likes']);
 
     if (likedCard === null) {
-      throw new NotFoundError('Передан несуществующий id карточки')
+      throw new NotFoundError('Передан несуществующий id карточки');
     }
 
-    return likedCard
+    return likedCard;
   },
 
   /**
@@ -68,13 +68,13 @@ module.exports = {
     const unlikedCard = await Card.findByIdAndUpdate(
       cardId,
       { $pull: { likes: userId } },
-      { new: true }
-    ).populate(['owner', 'likes'])
+      { new: true },
+    ).populate(['owner', 'likes']);
 
     if (unlikedCard === null) {
-      throw new NotFoundError('Передан несуществующий id карточки')
+      throw new NotFoundError('Передан несуществующий id карточки');
     }
 
-    return unlikedCard
+    return unlikedCard;
   },
-}
+};

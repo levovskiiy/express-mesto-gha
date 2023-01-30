@@ -1,65 +1,74 @@
-const CardService = require('../services/CardService')
+const CardService = require('../services/CardService');
+const BadRequestError = require('../exeptions/BadRequestError');
 
 module.exports = {
   async getAll(req, res, next) {
     try {
-      const cards = await CardService.getAll()
+      const cards = await CardService.getAll();
 
-      res.send({ data: cards })
+      res.send({ data: cards });
     } catch (err) {
-      next(err)
+      next(err);
     }
   },
 
   async create(req, res, next) {
     try {
-      const { name, link } = req.body
-      const { id } = req.user
+      const { name, link } = req.body;
+      const { id } = req.user;
 
-      const card = await CardService.create({ name, link, owner: id })
+      const card = await CardService.create({ name, link, owner: id });
 
-      res.send({ data: card })
+      res.send({ data: card });
     } catch (err) {
-      next(err)
+      next(err.name === 'ValidationError' ? new BadRequestError(err.message) : err);
     }
   },
 
   async delete(req, res, next) {
     try {
-      const { cardId } = req.params
-      const { id } = req.user
+      const { cardId } = req.params;
+      const { id } = req.user;
 
-      const deletedCard = await CardService.delete(cardId, id)
+      const deletedCard = await CardService.delete(cardId, id);
 
-      res.send({ data: deletedCard })
+      res.send({ data: deletedCard });
     } catch (err) {
-      next(err)
+      next(err.name === 'CastError' ? new BadRequestError(err.message) : err);
     }
   },
 
   async like(req, res, next) {
     try {
-      const { cardId } = req.params
-      const { id } = req.user
+      const { cardId } = req.params;
+      const { id } = req.user;
 
-      const likedCard = await CardService.like(cardId, id)
+      const likedCard = await CardService.like(cardId, id);
 
-      res.send({ data: likedCard })
+      res.send({ data: likedCard });
     } catch (err) {
-      next(err)
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new BadRequestError(err.message));
+      } else {
+        next(err);
+      }
     }
   },
 
   async unlike(req, res, next) {
     try {
-      const { cardId } = req.params
-      const { id } = req.user
+      const { cardId } = req.params;
+      const { id } = req.user;
 
-      const unlikedCard = await CardService.unlike(cardId, id)
+      const unlikedCard = await CardService.unlike(cardId, id);
 
-      res.send({ data: unlikedCard })
+      res.send({ data: unlikedCard });
     } catch (err) {
-      next(err)
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new BadRequestError(err.message));
+      } else {
+        next(err);
+      }
     }
   },
-}
+};

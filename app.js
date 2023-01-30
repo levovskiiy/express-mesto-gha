@@ -1,55 +1,36 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
-const dotenv = require('dotenv')
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
 
-const { errors } = require('celebrate')
-const { default: helmet } = require('helmet')
+const { errors } = require('celebrate');
+const { default: helmet } = require('helmet');
 
-const ValidationError = require('./exeptions/ValidationError')
-const CastError = require('./exeptions/CastError')
-const RequestError = require('./exeptions/RequestError')
-const routes = require('./routes/index')
+const routes = require('./routes/index');
 
-dotenv.config()
+dotenv.config();
 
-const DB_CONN = 'mongodb://localhost:27017/mestodb'
-const { PORT = 5000 } = process.env
+const DB_CONN = 'mongodb://localhost:27017/mestodb';
+const { PORT = 5000 } = process.env;
 
-const app = express()
+const app = express();
 
-app.use(helmet())
-app.use(cookieParser())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(helmet());
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(DB_CONN)
+mongoose.connect(DB_CONN);
 
-app.use(routes)
-app.use(errors())
-app.use((err, req, res, next) => {
-  console.log(err)
-  if (err instanceof mongoose.Error.ValidatorError) {
-    next(new ValidationError(err))
-  }
+app.use(routes);
 
-  if (err instanceof mongoose.Error.CastError) {
-    next(new CastError(err))
-  }
-
-  if (err.code === 11000) {
-    next(new RequestError('Пользователь с таким email уже существует'))
-  }
-
-  next(err)
-})
-
-app.use((err, req, res, next) => {
-  const statusCode = err.status || 500;
+app.use(errors(), (err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
 
   const message = statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
-  res.status(statusCode).send({ message })
-  next()
-})
-app.listen(PORT)
+  res.status(statusCode).send({ message });
+
+  next();
+});
+app.listen(PORT);

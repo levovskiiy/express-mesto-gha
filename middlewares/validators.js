@@ -1,43 +1,45 @@
-const { celebrate, Joi, Segments, CelebrateError } = require('celebrate')
-const { isValidObjectId } = require('mongoose')
-const { isURL } = require('validator')
+const {
+  celebrate, Joi, Segments, CelebrateError,
+} = require('celebrate');
+const { isValidObjectId } = require('mongoose');
+const { isURL } = require('validator');
 
-const minLength = 2
-const maxLength = 30
+const minLength = 2;
+const maxLength = 30;
 
-const createValidator = (schemaObj, segment) => {
-  return celebrate({ [segment]: Joi.object().keys(schemaObj).unknown(true) })
-}
+const createValidator = (schemaObj, segment) => celebrate(
+  { [segment]: Joi.object().keys(schemaObj).unknown(true) },
+);
 
 const correctURL = Joi.string().custom((value) => {
   if (isURL(value, { require_protocol: true })) {
-    return value
+    return value;
   }
 
-  throw new CelebrateError('Невалидный URL')
-})
+  throw new CelebrateError('Невалидный URL');
+});
 
 const correctId = Joi.string()
   .alphanum()
   .custom((value) => {
     if (isValidObjectId(value)) {
-      return value
+      return value;
     }
 
-    throw new CelebrateError('Невалидный ID')
-  })
+    throw new CelebrateError('Невалидный ID');
+  });
 
 const loginData = {
   email: Joi.string().required().email(),
   password: Joi.string().required(),
-}
+};
 
 module.exports = {
   validateGetUser: createValidator(
     {
       id: correctId,
     },
-    Segments.PARAMS
+    Segments.PARAMS,
   ),
   validateCreateUser: createValidator(
     {
@@ -46,7 +48,7 @@ module.exports = {
       about: Joi.string().min(minLength).max(maxLength),
       avatar: correctURL,
     },
-    Segments.BODY
+    Segments.BODY,
   ),
 
   validateLoginData: createValidator({ ...loginData }, Segments.BODY),
@@ -55,7 +57,7 @@ module.exports = {
     {
       avatar: correctURL.required(),
     },
-    Segments.BODY
+    Segments.BODY,
   ),
 
   validateUpdateUser: createValidator(
@@ -63,7 +65,7 @@ module.exports = {
       name: Joi.string().min(minLength).max(maxLength).required(),
       about: Joi.string().min(minLength).max(maxLength).required(),
     },
-    Segments.BODY
+    Segments.BODY,
   ),
 
   validateCreateCard: createValidator(
@@ -71,13 +73,13 @@ module.exports = {
       name: Joi.string().min(minLength).max(maxLength).required(),
       link: correctURL.required(),
     },
-    Segments.BODY
+    Segments.BODY,
   ),
 
   validateActionCard: createValidator(
     {
       cardId: correctId.required(),
     },
-    Segments.PARAMS
+    Segments.PARAMS,
   ),
-}
+};

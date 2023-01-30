@@ -1,12 +1,13 @@
-const NotFoundError = require('../exeptions/NotFoundError')
-const User = require('../models/User')
+const NotFoundError = require('../exeptions/NotFoundError');
+const UnauthorizedError = require('../exeptions/UnauthorizedError');
+const User = require('../models/User');
 
 module.exports = {
   /**
    * Возвращает всех пользователей в базе.
    */
   async getAll() {
-    return User.find({})
+    return User.find({});
   },
 
   /**
@@ -16,13 +17,13 @@ module.exports = {
    * @param {String} userId
    */
   async getOne(id) {
-    const user = await User.findById(id)
+    const user = await User.findById(id);
 
     if (user === null) {
-      throw new NotFoundError('Пользователь по указанному ID не найден.')
+      throw new NotFoundError('Пользователь по указанному ID не найден.');
     }
 
-    return user
+    return user;
   },
 
   /**
@@ -30,15 +31,7 @@ module.exports = {
    * @param {Object} userData
    */
   async create(userData) {
-    const { email } = userData
-
-    // if (User.findOne({ email })) {
-    //   throw new RequestError('Пользователь с таким email уже существует')
-    // }
-
-    const user = await User.create(userData)
-
-    return user
+    return User.create(userData);
   },
 
   /**
@@ -50,13 +43,13 @@ module.exports = {
     const updatedUser = await User.findByIdAndUpdate(id, userData, {
       new: true,
       runValidators: true,
-    })
+    });
 
     if (updatedUser === null) {
-      throw new NotFoundError('Пользователь с указанным ID не найден')
+      throw new NotFoundError('Пользователь с указанным ID не найден');
     }
 
-    return updatedUser
+    return updatedUser;
   },
 
   /**
@@ -68,23 +61,23 @@ module.exports = {
     const currentUser = await User.findByIdAndUpdate(
       id,
       { avatar },
-      { new: true, runValidators: true }
-    )
+      { new: true, runValidators: true },
+    );
 
     if (currentUser === null) {
-      throw new NotFoundError('Пользователь с указанным id не найден.')
+      throw new NotFoundError('Пользователь с указанным id не найден.');
     }
 
-    return currentUser
+    return currentUser;
   },
 
   async login(email, password) {
-    const user = await User.findUserByCredentials(email, password)
+    const user = await User.findUserByCredentials(email, password);
 
     if (!user) {
-      throw new UnauthorizedError('Неверный логин или пароль')
+      throw new UnauthorizedError('Неверный логин или пароль');
     }
 
-    return user
+    return user;
   },
-}
+};
