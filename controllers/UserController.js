@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const UserService = require('../services/UserService')
-
+const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -10,6 +10,7 @@ module.exports = {
    * Получение всех пользователей
    * @param req
    * @param res
+   * @param next
    * @return {Promise<void>}
    */
   async getAll(req, res, next) {
@@ -26,6 +27,7 @@ module.exports = {
    * Получение пользователя по ID
    * @param req
    * @param res
+   * @param next
    * @return {Promise<void>}
    */
   async getOne(req, res, next) {
@@ -53,19 +55,23 @@ module.exports = {
    * Создание пользователя
    * @param req
    * @param res
+   * @param next
    * @return {Promise<void>}
    */
   async create(req, res, next) {
     try {
-      const { email, password } = req.body
+      const { email, password, name, about, avatar } = req.body
       const hashPassword = await bcrypt.hash(password, 10)
 
       const createdUser = await UserService.create({
         email,
-        password: hashPassword,
+        hashPassword,
+        name,
+        about,
+        avatar,
       })
 
-      res.status(201).send({ data: createdUser })
+      res.status(201).send({ data: createdUser.toJSON() })
     } catch (err) {
       next(err)
     }
@@ -75,6 +81,7 @@ module.exports = {
    * Обновление данных профиля
    * @param req
    * @param res
+   * @param next
    * @return {Promise<void>}
    */
   async update(req, res, next) {
@@ -94,6 +101,7 @@ module.exports = {
    * Обновление аватара пользователя
    * @param req
    * @param res
+   * @param next
    * @return {Promise<void>}
    */
   async updateAvatar(req, res, next) {
@@ -112,13 +120,15 @@ module.exports = {
   async login(req, res, next) {
     try {
       const { email, password } = req.body
+
       const user = await UserService.login(email, password)
 
-      const token = sign({ id: user._id }, JWT_SECRET)
+      const token = jwt.sign({ id: user._id }, JWT_SECRET, {expiresIn: '7d'})
 
       res
         .cookie('jwt', token, { httpOnly: true, sameSite: true })
         .send({ message: 'logged!' })
+
     } catch (err) {
       next(err)
     }
