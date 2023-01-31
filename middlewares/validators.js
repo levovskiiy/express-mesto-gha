@@ -37,7 +37,7 @@ const loginData = {
 module.exports = {
   validateGetUser: createValidator(
     {
-      id: correctId,
+      userId: correctId,
     },
     Segments.PARAMS,
   ),
