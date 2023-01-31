@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 const { errors } = require('celebrate');
 const { default: helmet } = require('helmet');
 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routes = require('./routes/index');
 
 dotenv.config();
@@ -23,7 +25,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(DB_CONN);
 
+app.use(cors(
+  {
+    origin: ['mesto.levovskiiy.nomoredomainsclub.ru', 'localhost:5000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 204,
+    credentials: true,
+  },
+));
+
+app.options('*', cors());
+app.use(requestLogger);
 app.use(routes);
+app.use(errorLogger);
 
 app.use(errors(), (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
